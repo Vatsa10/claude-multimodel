@@ -2,6 +2,8 @@
 
 Switch between model providers in Claude Code — DeepSeek, Gemini, OpenAI, Groq, Kimi, GLM, Qwen, Ollama, Anthropic. Install once, works globally in every project.
 
+**Website:** https://claude-mm.vatsa.online
+
 ## Install
 
 ```bash
