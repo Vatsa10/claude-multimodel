@@ -1,0 +1,96 @@
+{
+  "active": "claude",
+  "profiles": {
+    "claude": {
+      "description": "Anthropic Claude — always current defaults",
+      "env": {
+        "ANTHROPIC_BASE_URL": "",
+        "ANTHROPIC_AUTH_TOKEN": "",
+        "ANTHROPIC_MODEL": "",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "",
+        "CLAUDE_CODE_SUBAGENT_MODEL": "",
+        "CLAUDE_CODE_EFFORT_LEVEL": "medium"
+      }
+    },
+    "claude-max": {
+      "description": "Anthropic Claude — max effort, always current defaults",
+      "env": {
+        "ANTHROPIC_BASE_URL": "",
+        "ANTHROPIC_AUTH_TOKEN": "",
+        "ANTHROPIC_MODEL": "",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "",
+        "CLAUDE_CODE_SUBAGENT_MODEL": "",
+        "CLAUDE_CODE_EFFORT_LEVEL": "max"
+      }
+    },
+    "deepseek": {
+      "description": "DeepSeek v4 Pro — best coding model",
+      "env": {
+        "ANTHROPIC_BASE_URL": "https://api.deepseek.com/anthropic",
+        "ANTHROPIC_AUTH_TOKEN": "",
+        "ANTHROPIC_MODEL": "deepseek-v4-pro",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "deepseek-v4-pro",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "deepseek-v4-pro",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4-flash",
+        "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek-v4-flash",
+        "CLAUDE_CODE_EFFORT_LEVEL": "max"
+      }
+    },
+    "deepseek-flash": {
+      "description": "DeepSeek v4 Flash — ultra-fast, cheap",
+      "env": {
+        "ANTHROPIC_BASE_URL": "https://api.deepseek.com/anthropic",
+        "ANTHROPIC_AUTH_TOKEN": "",
+        "ANTHROPIC_MODEL": "deepseek-v4-flash",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "deepseek-v4-flash",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "deepseek-v4-flash",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4-flash",
+        "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek-v4-flash",
+        "CLAUDE_CODE_EFFORT_LEVEL": "max"
+      }
+    },
+    "openai": {
+      "description": "OpenAI GPT-5.5 — latest flagship",
+      "env": {
+        "ANTHROPIC_BASE_URL": "https://api.openai.com/v1/anthropic",
+        "ANTHROPIC_AUTH_TOKEN": "",
+        "ANTHROPIC_MODEL": "gpt-5.5",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "gpt-5.5",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "gpt-5.5",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "gpt-4o-mini",
+        "CLAUDE_CODE_SUBAGENT_MODEL": "gpt-4o-mini",
+        "CLAUDE_CODE_EFFORT_LEVEL": "max"
+      }
+    },
+    "gemini": {
+      "description": "Google Gemini 2.5 Pro",
+      "env": {
+        "ANTHROPIC_BASE_URL": "https://generativelanguage.googleapis.com/v1beta/openai",
+        "ANTHROPIC_AUTH_TOKEN": "",
+        "ANTHROPIC_MODEL": "gemini-2.5-pro",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "gemini-2.5-pro",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "gemini-2.5-flash",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "gemini-2.5-flash",
+        "CLAUDE_CODE_SUBAGENT_MODEL": "gemini-2.5-flash",
+        "CLAUDE_CODE_EFFORT_LEVEL": "max"
+      }
+    },
+    "groq": {
+      "description": "Groq — ultra-fast inference",
+      "env": {
+        "ANTHROPIC_BASE_URL": "https://api.groq.com/openai/v1/anthropic",
+        "ANTHROPIC_AUTH_TOKEN": "",
+        "ANTHROPIC_MODEL": "llama-3.3-70b-versatile",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "llama-3.3-70b-versatile",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "llama-3.1-8b-instant",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "llama-3.1-8b-instant",
+        "CLAUDE_CODE_SUBAGENT_MODEL": "llama-3.1-8b-instant",
+        "CLAUDE_CODE_EFFORT_LEVEL": "max"
+      }
+    }
+  }
+}

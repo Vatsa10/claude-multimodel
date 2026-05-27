@@ -1,0 +1,33 @@
+{
+  "name": "claude-multimodel",
+  "version": "1.0.0",
+  "description": "Switch between model providers (DeepSeek, Gemini, OpenAI, Anthropic) in Claude Code",
+  "bin": {
+    "claude-mm": "./bin/claude-mm.js"
+  },
+  "scripts": {
+    "postinstall": "node lib/install.js"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "commands/",
+    "defaults/"
+  ],
+  "keywords": [
+    "claude",
+    "claude-code",
+    "anthropic",
+    "deepseek",
+    "gemini",
+    "multi-model"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Vatsa10/claude-multimodel"
+  }
+}
