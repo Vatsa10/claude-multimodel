@@ -23,6 +23,9 @@ claude-mm list                     # show all profiles + key status
 claude-mm active                   # show current profile
 claude-mm providers                # list all known providers + compatibility
 claude-mm set-key deepseek         # set API key (hidden input)
+claude-mm set-model deepseek       # change model for a profile (interactive)
+claude-mm set-model deepseek deepseek-r1          # set main model directly
+claude-mm set-model deepseek deepseek-r1 deepseek-v4-flash  # set main + subagent
 claude-mm add                      # add new profile (guided wizard)
 claude-mm remove <profile>         # remove a profile
 claude-mm set-default deepseek     # make DeepSeek permanent (writes to shell profile)
@@ -66,6 +69,27 @@ claude-mm set-key deepseek     # specific profile
 Keys stored in `~/.claude/multimodel/profiles.json` — local only, never committed.
 
 Native Anthropic profiles read your existing `ANTHROPIC_API_KEY`. No setup needed.
+
+---
+
+## Change model for a profile
+
+```bash
+claude-mm set-model deepseek                              # interactive
+claude-mm set-model deepseek deepseek-r1                  # set main model
+claude-mm set-model deepseek deepseek-r1 deepseek-v4-flash  # main + subagent
+```
+
+Shows current models, hints popular models for that provider, then saves.
+
+Updates: `ANTHROPIC_MODEL`, `ANTHROPIC_DEFAULT_OPUS_MODEL`, `ANTHROPIC_DEFAULT_SONNET_MODEL`, `ANTHROPIC_DEFAULT_HAIKU_MODEL`, `CLAUDE_CODE_SUBAGENT_MODEL`.
+
+Or edit directly:
+```bash
+# open profiles file
+code ~/.claude/multimodel/profiles.json    # VS Code
+notepad $env:USERPROFILE\.claude\multimodel\profiles.json  # Windows
+```
 
 ---
 
@@ -116,25 +140,40 @@ claude-mm providers
 | Together AI | `together` | Anthropic-compatible |
 | Qwen (Alibaba) | `qwen` | Anthropic-compatible |
 | Ollama (local) | `ollama` | Anthropic-compatible |
+| OpenRouter | `openrouter` | Needs LiteLLM proxy |
 | Kimi (Moonshot) | `kimi` | Needs LiteLLM proxy |
 | GLM (Zhipu AI) | `glm` | Needs LiteLLM proxy |
 | Custom | `custom` | Anthropic-compatible |
 
-### Kimi / GLM (OpenAI-only providers)
+### OpenRouter / Kimi / GLM (OpenAI-only providers)
 
 These providers only expose an OpenAI-compatible API. Claude Code needs Anthropic-compatible format. Bridge with LiteLLM:
 
 ```bash
 pip install litellm
 
-# Kimi
+# OpenRouter — access 100+ models with one API key (openrouter.ai)
+litellm --model openrouter/anthropic/claude-opus-4 --api_key YOUR_OPENROUTER_KEY --port 4000
+
+# Kimi (Moonshot)
 litellm --model openai/moonshot-v1-128k --api_key YOUR_MOONSHOT_KEY --port 4000
 
-# GLM
+# GLM (Zhipu AI)
 litellm --model openai/glm-4-plus --api_key YOUR_ZHIPUAI_KEY --port 4000
 ```
 
-Then add the profile (`claude-mm add` → pick kimi/glm). Base URL auto-set to `http://localhost:4000`. Start LiteLLM before launching Claude.
+Then add the profile (`claude-mm add` → pick provider). Base URL auto-set to `http://localhost:4000`. Start LiteLLM before launching Claude.
+
+**OpenRouter popular models** (swap into the LiteLLM `--model` flag):
+```
+openrouter/anthropic/claude-opus-4
+openrouter/openai/gpt-5.5
+openrouter/google/gemini-2.5-pro
+openrouter/deepseek/deepseek-chat
+openrouter/deepseek/deepseek-r1
+openrouter/meta-llama/llama-3.3-70b-instruct
+openrouter/x-ai/grok-3
+```
 
 ---
 

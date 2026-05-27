@@ -167,6 +167,14 @@ async function cmdAdd() {
     console.log(`   ${CYAN}litellm --model ${selectedProvider.litellmModel} --api_key YOUR_KEY --port 4000${RESET}\n`);
     console.log(`   Base URL will be: ${GRAY}http://localhost:4000${RESET}`);
     console.log(`   Set ${selectedProvider.litellmEnvKey} in your env before running LiteLLM.\n`);
+
+    // Show popular models if available
+    if (selectedProvider.popularModels?.length) {
+      console.log(`   ${CYAN}Popular models on ${selectedProvider.name}:${RESET}`);
+      selectedProvider.popularModels.forEach(m => console.log(`     ${GRAY}${m}${RESET}`));
+      console.log('');
+    }
+
     const cont = await ask('Continue anyway? (y/N): ');
     if (cont.toLowerCase() !== 'y') return;
   }
@@ -367,6 +375,77 @@ function cmdProviders() {
   console.log(`Add profile from provider: ${CYAN}claude-mm add${RESET}\n`);
 }
 
+async function cmdSetModel(profileName, modelArg, subagentArg) {
+  const config = profiles.load();
+  const names = Object.keys(config.profiles);
+
+  // Pick profile
+  if (!profileName) {
+    profileName = await pickFromList(
+      'Select profile to update model:',
+      names,
+      name => {
+        const p = config.profiles[name];
+        return `${name} — ${p.env.ANTHROPIC_MODEL || '(default)'} / subagent: ${p.env.CLAUDE_CODE_SUBAGENT_MODEL || '(default)'}`;
+      },
+      config.active
+    );
+  }
+
+  if (!config.profiles[profileName]) die(`Unknown profile '${profileName}'`);
+  const profile = config.profiles[profileName];
+
+  console.log(`\n${CYAN}Current models for '${profileName}':${RESET}`);
+  console.log(`  Main:    ${GRAY}${profile.env.ANTHROPIC_MODEL || '(Claude Code default)'}${RESET}`);
+  console.log(`  Subagent: ${GRAY}${profile.env.CLAUDE_CODE_SUBAGENT_MODEL || '(Claude Code default)'}${RESET}\n`);
+
+  // Show provider popular models hint if applicable
+  const registry = profiles.loadProviders();
+  const matchedProvider = Object.values(registry).find(p =>
+    p.baseUrl && profile.env.ANTHROPIC_BASE_URL &&
+    profile.env.ANTHROPIC_BASE_URL.includes(new URL(p.baseUrl.startsWith('http') ? p.baseUrl : 'http://x').hostname || '')
+  );
+  if (matchedProvider?.popularModels?.length) {
+    console.log(`${CYAN}Popular models for this provider:${RESET}`);
+    matchedProvider.popularModels.forEach(m => console.log(`  ${GRAY}${m}${RESET}`));
+    console.log('');
+  }
+
+  // Get main model
+  const currentModel = profile.env.ANTHROPIC_MODEL || '';
+  const modelInput = modelArg || await ask(`New main model ID [${currentModel || 'keep current'}]: `);
+  const model = modelInput.trim();
+
+  // Get subagent model
+  const currentSubagent = profile.env.CLAUDE_CODE_SUBAGENT_MODEL || '';
+  const subagentInput = subagentArg || await ask(`New subagent model ID [${currentSubagent || 'same as main'}]: `);
+  const subagent = subagentInput.trim() || model;
+
+  if (!model && !subagentInput.trim()) {
+    console.log('Nothing changed.');
+    return;
+  }
+
+  // Apply changes
+  if (model) {
+    config.profiles[profileName].env.ANTHROPIC_MODEL = model;
+    config.profiles[profileName].env.ANTHROPIC_DEFAULT_OPUS_MODEL = model;
+    config.profiles[profileName].env.ANTHROPIC_DEFAULT_SONNET_MODEL = model;
+    config.profiles[profileName].env.ANTHROPIC_DEFAULT_HAIKU_MODEL = subagent;
+    config.profiles[profileName].env.CLAUDE_CODE_SUBAGENT_MODEL = subagent;
+  } else if (subagentInput.trim()) {
+    config.profiles[profileName].env.ANTHROPIC_DEFAULT_HAIKU_MODEL = subagent;
+    config.profiles[profileName].env.CLAUDE_CODE_SUBAGENT_MODEL = subagent;
+  }
+
+  profiles.save(config);
+
+  console.log(`\n${GREEN}✓ Models updated for '${profileName}'${RESET}`);
+  if (model) console.log(`  Main:     ${model}`);
+  console.log(`  Subagent: ${subagent}`);
+  console.log(`\nLaunch: ${CYAN}claude-mm launch ${profileName}${RESET}\n`);
+}
+
 function cmdRemove(name) {
   if (!name) die('Usage: claude-mm remove <profile-name>');
   try {
@@ -397,6 +476,7 @@ ${CYAN}Usage:${RESET}
   claude-mm list                   List all profiles
   claude-mm active                 Show current active profile
   claude-mm set-key [profile]      Set API key for profile (hidden input)
+  claude-mm set-model [profile]    Change model ID for a profile
   claude-mm add                    Add new profile interactively
   claude-mm remove <profile>       Remove a profile
   claude-mm set-default [profile]  Write env vars to shell profile (permanent)
@@ -440,6 +520,10 @@ async function main() {
     case 'rm':
     case 'delete':
       cmdRemove(args[0]);
+      break;
+    case 'set-model':
+    case 'model':
+      await cmdSetModel(args[0], args[1], args[2]);
       break;
     case 'providers':
     case 'provider-list':
