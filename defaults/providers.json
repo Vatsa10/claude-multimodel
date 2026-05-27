@@ -1,0 +1,154 @@
+{
+  "providers": {
+    "anthropic": {
+      "name": "Anthropic",
+      "baseUrl": "",
+      "compatibility": "native",
+      "docsUrl": "https://docs.anthropic.com",
+      "models": {
+        "flagship": "claude-opus-4-7",
+        "balanced": "claude-sonnet-4-6",
+        "fast": "claude-haiku-4-5-20251001"
+      },
+      "note": "Leave base URL empty. Uses ANTHROPIC_API_KEY from system env."
+    },
+    "deepseek": {
+      "name": "DeepSeek",
+      "baseUrl": "https://api.deepseek.com/anthropic",
+      "compatibility": "anthropic",
+      "docsUrl": "https://platform.deepseek.com/docs",
+      "models": {
+        "flagship": "deepseek-v4-pro",
+        "balanced": "deepseek-v4-pro",
+        "fast": "deepseek-v4-flash"
+      },
+      "note": "Full Anthropic-compatible API. Best value for coding."
+    },
+    "openai": {
+      "name": "OpenAI",
+      "baseUrl": "https://api.openai.com/v1/anthropic",
+      "compatibility": "anthropic",
+      "docsUrl": "https://platform.openai.com/docs",
+      "models": {
+        "flagship": "gpt-5.5",
+        "balanced": "gpt-4o",
+        "fast": "gpt-4o-mini"
+      },
+      "note": "OpenAI Anthropic-compatible endpoint."
+    },
+    "gemini": {
+      "name": "Google Gemini",
+      "baseUrl": "https://generativelanguage.googleapis.com/v1beta/openai",
+      "compatibility": "anthropic",
+      "docsUrl": "https://ai.google.dev/docs",
+      "models": {
+        "flagship": "gemini-2.5-pro",
+        "balanced": "gemini-2.5-pro",
+        "fast": "gemini-2.5-flash"
+      },
+      "note": "Via Google AI Studio. Get key at aistudio.google.com."
+    },
+    "groq": {
+      "name": "Groq",
+      "baseUrl": "https://api.groq.com/openai/v1/anthropic",
+      "compatibility": "anthropic",
+      "docsUrl": "https://console.groq.com/docs",
+      "models": {
+        "flagship": "llama-3.3-70b-versatile",
+        "balanced": "llama-3.3-70b-versatile",
+        "fast": "llama-3.1-8b-instant"
+      },
+      "note": "Ultra-fast inference. Free tier available."
+    },
+    "mistral": {
+      "name": "Mistral AI",
+      "baseUrl": "https://api.mistral.ai/v1/anthropic",
+      "compatibility": "anthropic",
+      "docsUrl": "https://docs.mistral.ai",
+      "models": {
+        "flagship": "mistral-large-latest",
+        "balanced": "mistral-small-latest",
+        "fast": "mistral-small-latest"
+      },
+      "note": "European provider. Strong at code and reasoning."
+    },
+    "together": {
+      "name": "Together AI",
+      "baseUrl": "https://api.together.xyz/v1/anthropic",
+      "compatibility": "anthropic",
+      "docsUrl": "https://docs.together.ai",
+      "models": {
+        "flagship": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+        "balanced": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+        "fast": "meta-llama/Llama-3.2-3B-Instruct-Turbo"
+      },
+      "note": "Open source models at scale. Many model options."
+    },
+    "kimi": {
+      "name": "Kimi (Moonshot AI)",
+      "baseUrl": "http://localhost:4000",
+      "compatibility": "openai-only",
+      "docsUrl": "https://platform.moonshot.cn/docs",
+      "models": {
+        "flagship": "moonshot-v1-128k",
+        "balanced": "moonshot-v1-32k",
+        "fast": "moonshot-v1-8k"
+      },
+      "requiresLiteLLM": true,
+      "litellmModel": "openai/moonshot-v1-128k",
+      "litellmEnvKey": "MOONSHOT_API_KEY",
+      "note": "OpenAI-compatible only. Requires LiteLLM proxy to use with Claude Code."
+    },
+    "glm": {
+      "name": "GLM (Zhipu AI)",
+      "baseUrl": "http://localhost:4000",
+      "compatibility": "openai-only",
+      "docsUrl": "https://open.bigmodel.cn/dev/howuse/introduction",
+      "models": {
+        "flagship": "glm-4-plus",
+        "balanced": "glm-4",
+        "fast": "glm-4-flash"
+      },
+      "requiresLiteLLM": true,
+      "litellmModel": "openai/glm-4-plus",
+      "litellmEnvKey": "ZHIPUAI_API_KEY",
+      "note": "OpenAI-compatible only. Requires LiteLLM proxy to use with Claude Code."
+    },
+    "qwen": {
+      "name": "Qwen (Alibaba)",
+      "baseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1/anthropic",
+      "compatibility": "anthropic",
+      "docsUrl": "https://www.alibabacloud.com/help/en/model-studio",
+      "models": {
+        "flagship": "qwen-max",
+        "balanced": "qwen-plus",
+        "fast": "qwen-turbo"
+      },
+      "note": "Alibaba's Qwen models. Strong multilingual + code."
+    },
+    "ollama": {
+      "name": "Ollama (local)",
+      "baseUrl": "http://localhost:11434/anthropic",
+      "compatibility": "anthropic",
+      "docsUrl": "https://ollama.com/docs",
+      "models": {
+        "flagship": "llama3.3:70b",
+        "balanced": "llama3.2:latest",
+        "fast": "llama3.2:3b"
+      },
+      "note": "Run models locally. No API key needed. Must have Ollama running."
+    },
+    "custom": {
+      "name": "Custom / Self-hosted",
+      "baseUrl": "",
+      "compatibility": "anthropic",
+      "docsUrl": "",
+      "models": {
+        "flagship": "",
+        "balanced": "",
+        "fast": ""
+      },
+      "note": "Any Anthropic-compatible endpoint. Enter your own URL and model IDs."
+    }
+  }
+}

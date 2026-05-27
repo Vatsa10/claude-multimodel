@@ -130,37 +130,113 @@ async function setKey(profileName) {
 async function cmdAdd() {
   console.log(`\n${CYAN}Add new profile${RESET}\n`);
 
-  const name = await ask('Profile name (slug, no spaces): ');
-  if (!name || /\s/.test(name)) die('Invalid name');
+  const providerRegistry = profiles.loadProviders();
+  const providerKeys = Object.keys(providerRegistry);
 
-  const description = await ask('Description: ');
-  const baseUrl = await ask('Base URL (empty for native Anthropic): ');
-  const model = await ask('Main model ID: ');
-  const subagent = await ask('Subagent model ID (fast/cheap model): ');
-  const effort = await ask('Effort level [low/medium/high/max] (default: max): ') || 'max';
+  // Step 1: pick known provider or manual
+  console.log('Select provider:');
+  providerKeys.forEach((key, i) => {
+    const p = providerRegistry[key];
+    const compat = p.requiresLiteLLM
+      ? `${YELLOW}[needs LiteLLM]${RESET}`
+      : p.compatibility === 'native' ? `${GRAY}[native]${RESET}` : `${GREEN}[compatible]${RESET}`;
+    console.log(`  [${i + 1}] ${p.name} ${compat}`);
+    if (p.note) console.log(`        ${GRAY}${p.note}${RESET}`);
+  });
+  console.log('');
+
+  const providerAnswer = await ask('Enter number or provider key (or "manual" to skip): ');
+  let selectedProvider = null;
+
+  if (providerAnswer.toLowerCase() !== 'manual') {
+    if (/^\d+$/.test(providerAnswer)) {
+      const idx = parseInt(providerAnswer, 10) - 1;
+      const key = providerKeys[idx];
+      selectedProvider = key ? providerRegistry[key] : null;
+    } else {
+      selectedProvider = providerRegistry[providerAnswer.toLowerCase()] || null;
+    }
+  }
+
+  // LiteLLM warning
+  if (selectedProvider?.requiresLiteLLM) {
+    console.log(`\n${YELLOW}⚠  ${selectedProvider.name} uses OpenAI-compatible API only.${RESET}`);
+    console.log(`   Claude Code needs Anthropic-compatible API.`);
+    console.log(`   Requires LiteLLM proxy running locally:\n`);
+    console.log(`   ${CYAN}pip install litellm${RESET}`);
+    console.log(`   ${CYAN}litellm --model ${selectedProvider.litellmModel} --api_key YOUR_KEY --port 4000${RESET}\n`);
+    console.log(`   Base URL will be: ${GRAY}http://localhost:4000${RESET}`);
+    console.log(`   Set ${selectedProvider.litellmEnvKey} in your env before running LiteLLM.\n`);
+    const cont = await ask('Continue anyway? (y/N): ');
+    if (cont.toLowerCase() !== 'y') return;
+  }
+
+  // Step 2: profile name
+  const defaultName = selectedProvider
+    ? providerKeys.find(k => providerRegistry[k] === selectedProvider) || ''
+    : '';
+  const nameInput = await ask(`Profile name (slug)${defaultName ? ` [${defaultName}]` : ''}: `);
+  const name = nameInput.trim() || defaultName;
+  if (!name || /\s/.test(name)) die('Invalid name — no spaces allowed');
+
+  // Step 3: description
+  const defaultDesc = selectedProvider?.name || name;
+  const descInput = await ask(`Description [${defaultDesc}]: `);
+  const description = descInput.trim() || defaultDesc;
+
+  // Step 4: base URL
+  const defaultUrl = selectedProvider?.baseUrl || '';
+  const urlInput = await ask(`Base URL${defaultUrl ? ` [${defaultUrl}]` : ' (empty = native Anthropic)'}: `);
+  const baseUrl = urlInput.trim() || defaultUrl;
+
+  // Step 5: models
+  const defaultFlagship = selectedProvider?.models?.flagship || '';
+  const defaultFast = selectedProvider?.models?.fast || '';
+
+  console.log(`\n${CYAN}Model IDs${RESET} ${GRAY}(check provider docs for exact names)${RESET}`);
+  if (selectedProvider?.docsUrl) console.log(`  Docs: ${selectedProvider.docsUrl}\n`);
+
+  const modelInput = await ask(`Main model ID${defaultFlagship ? ` [${defaultFlagship}]` : ''}: `);
+  const model = modelInput.trim() || defaultFlagship;
+  if (!model) die('Model ID required');
+
+  const subagentInput = await ask(`Subagent model ID (fast/cheap)${defaultFast ? ` [${defaultFast}]` : ''}: `);
+  const subagent = subagentInput.trim() || defaultFast || model;
+
+  // Step 6: effort
+  const effortInput = await ask('Effort level [low/medium/high/max] (default: max): ');
+  const effort = effortInput.trim() || 'max';
 
   const profile = {
-    description: description || name,
+    description,
     env: {
-      ANTHROPIC_BASE_URL: baseUrl.trim(),
+      ANTHROPIC_BASE_URL: baseUrl,
       ANTHROPIC_AUTH_TOKEN: '',
-      ANTHROPIC_MODEL: model.trim(),
-      ANTHROPIC_DEFAULT_OPUS_MODEL: model.trim(),
-      ANTHROPIC_DEFAULT_SONNET_MODEL: model.trim(),
-      ANTHROPIC_DEFAULT_HAIKU_MODEL: subagent.trim(),
-      CLAUDE_CODE_SUBAGENT_MODEL: subagent.trim(),
-      CLAUDE_CODE_EFFORT_LEVEL: effort.trim(),
+      ANTHROPIC_MODEL: model,
+      ANTHROPIC_DEFAULT_OPUS_MODEL: model,
+      ANTHROPIC_DEFAULT_SONNET_MODEL: model,
+      ANTHROPIC_DEFAULT_HAIKU_MODEL: subagent,
+      CLAUDE_CODE_SUBAGENT_MODEL: subagent,
+      CLAUDE_CODE_EFFORT_LEVEL: effort,
     }
   };
 
   try {
     profiles.add(name, profile);
     console.log(`\n${GREEN}✓ Profile '${name}' added.${RESET}`);
-    if (baseUrl.trim()) {
+
+    const needsKey = baseUrl && !selectedProvider?.requiresLiteLLM;
+    if (needsKey) {
       const setNow = await ask('Set API key now? (y/N): ');
       if (setNow.toLowerCase() === 'y') await setKey(name);
     }
-    console.log(`Launch: ${CYAN}claude-mm launch ${name}${RESET}\n`);
+
+    if (selectedProvider?.requiresLiteLLM) {
+      console.log(`\n${YELLOW}Remember: start LiteLLM proxy before launching:${RESET}`);
+      console.log(`  ${CYAN}litellm --model ${selectedProvider.litellmModel} --api_key $${selectedProvider.litellmEnvKey} --port 4000${RESET}`);
+    }
+
+    console.log(`\nLaunch: ${CYAN}claude-mm launch ${name}${RESET}\n`);
   } catch (err) {
     die(err.message);
   }
@@ -275,6 +351,22 @@ function cmdUnsetDefault() {
   console.log(`${GRAY}Restart terminal. Plain claude uses system defaults again.${RESET}\n`);
 }
 
+function cmdProviders() {
+  const registry = profiles.loadProviders();
+  console.log(`\n${CYAN}Known providers${RESET}\n`);
+  for (const [key, p] of Object.entries(registry)) {
+    const compat = p.requiresLiteLLM
+      ? `${YELLOW}needs LiteLLM proxy${RESET}`
+      : p.compatibility === 'native' ? `${GRAY}native Anthropic${RESET}` : `${GREEN}Anthropic-compatible${RESET}`;
+    console.log(`  ${CYAN}${key}${RESET} — ${p.name} (${compat})`);
+    console.log(`    Models: ${p.models.flagship} / ${p.models.fast}`);
+    if (p.baseUrl) console.log(`    URL: ${GRAY}${p.baseUrl}${RESET}`);
+    if (p.docsUrl) console.log(`    Docs: ${GRAY}${p.docsUrl}${RESET}`);
+    console.log('');
+  }
+  console.log(`Add profile from provider: ${CYAN}claude-mm add${RESET}\n`);
+}
+
 function cmdRemove(name) {
   if (!name) die('Usage: claude-mm remove <profile-name>');
   try {
@@ -309,6 +401,7 @@ ${CYAN}Usage:${RESET}
   claude-mm remove <profile>       Remove a profile
   claude-mm set-default [profile]  Write env vars to shell profile (permanent)
   claude-mm unset-default          Remove permanent env vars from shell profile
+  claude-mm providers              List all known providers + compatibility
   claude-mm help                   Show this help
 
 ${CYAN}Inside Claude:${RESET}
@@ -347,6 +440,10 @@ async function main() {
     case 'rm':
     case 'delete':
       cmdRemove(args[0]);
+      break;
+    case 'providers':
+    case 'provider-list':
+      cmdProviders();
       break;
     case 'set-default':
     case 'default':
