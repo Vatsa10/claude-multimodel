@@ -1,2 +1,8 @@
 node_modules/
 *.log
+
+# site build artifacts (not source)
+site/.next/
+site/out/
+site/node_modules/
+

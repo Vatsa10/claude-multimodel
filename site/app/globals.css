@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "Cascadia Code", monospace;
+
+  --color-blue-accent: #2563eb;
+  --color-blue-light: #eff6ff;
+  --color-blue-mid: #dbeafe;
+  --color-blue-border: #bfdbfe;
+  --color-terminal: #0a0a0a;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: #dbeafe;
+  color: #1e3a8a;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
