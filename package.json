@@ -1,6 +1,6 @@
 {
   "name": "claude-multimodel",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Switch between model providers (DeepSeek, Gemini, OpenAI, Anthropic) in Claude Code",
   "bin": {
     "claude-mm": "bin/claude-mm.js"
