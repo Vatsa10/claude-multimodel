@@ -24,138 +24,21 @@
       },
       "note": "Full Anthropic-compatible API. Best value for coding."
     },
-    "openai": {
-      "name": "OpenAI",
-      "baseUrl": "https://api.openai.com/v1/anthropic",
-      "compatibility": "anthropic",
-      "docsUrl": "https://platform.openai.com/docs",
-      "models": {
-        "flagship": "gpt-5.5",
-        "balanced": "gpt-4o",
-        "fast": "gpt-4o-mini"
-      },
-      "note": "OpenAI Anthropic-compatible endpoint."
-    },
-    "gemini": {
-      "name": "Google Gemini",
-      "baseUrl": "https://generativelanguage.googleapis.com/v1beta/openai",
-      "compatibility": "anthropic",
-      "docsUrl": "https://ai.google.dev/docs",
-      "models": {
-        "flagship": "gemini-2.5-pro",
-        "balanced": "gemini-2.5-pro",
-        "fast": "gemini-2.5-flash"
-      },
-      "note": "Via Google AI Studio. Get key at aistudio.google.com."
-    },
-    "groq": {
-      "name": "Groq",
-      "baseUrl": "https://api.groq.com/openai/v1/anthropic",
-      "compatibility": "anthropic",
-      "docsUrl": "https://console.groq.com/docs",
-      "models": {
-        "flagship": "llama-3.3-70b-versatile",
-        "balanced": "llama-3.3-70b-versatile",
-        "fast": "llama-3.1-8b-instant"
-      },
-      "note": "Ultra-fast inference. Free tier available."
-    },
-    "mistral": {
-      "name": "Mistral AI",
-      "baseUrl": "https://api.mistral.ai/v1/anthropic",
-      "compatibility": "anthropic",
-      "docsUrl": "https://docs.mistral.ai",
-      "models": {
-        "flagship": "mistral-large-latest",
-        "balanced": "mistral-small-latest",
-        "fast": "mistral-small-latest"
-      },
-      "note": "European provider. Strong at code and reasoning."
-    },
-    "together": {
-      "name": "Together AI",
-      "baseUrl": "https://api.together.xyz/v1/anthropic",
-      "compatibility": "anthropic",
-      "docsUrl": "https://docs.together.ai",
-      "models": {
-        "flagship": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
-        "balanced": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
-        "fast": "meta-llama/Llama-3.2-3B-Instruct-Turbo"
-      },
-      "note": "Open source models at scale. Many model options."
-    },
-    "kimi": {
-      "name": "Kimi (Moonshot AI)",
-      "baseUrl": "http://localhost:4000",
-      "compatibility": "openai-only",
-      "docsUrl": "https://platform.moonshot.cn/docs",
-      "models": {
-        "flagship": "moonshot-v1-128k",
-        "balanced": "moonshot-v1-32k",
-        "fast": "moonshot-v1-8k"
-      },
-      "requiresLiteLLM": true,
-      "litellmModel": "openai/moonshot-v1-128k",
-      "litellmEnvKey": "MOONSHOT_API_KEY",
-      "note": "OpenAI-compatible only. Requires LiteLLM proxy to use with Claude Code."
-    },
-    "glm": {
-      "name": "GLM (Zhipu AI)",
-      "baseUrl": "http://localhost:4000",
-      "compatibility": "openai-only",
-      "docsUrl": "https://open.bigmodel.cn/dev/howuse/introduction",
-      "models": {
-        "flagship": "glm-4-plus",
-        "balanced": "glm-4",
-        "fast": "glm-4-flash"
-      },
-      "requiresLiteLLM": true,
-      "litellmModel": "openai/glm-4-plus",
-      "litellmEnvKey": "ZHIPUAI_API_KEY",
-      "note": "OpenAI-compatible only. Requires LiteLLM proxy to use with Claude Code."
-    },
-    "qwen": {
-      "name": "Qwen (Alibaba)",
-      "baseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1/anthropic",
-      "compatibility": "anthropic",
-      "docsUrl": "https://www.alibabacloud.com/help/en/model-studio",
-      "models": {
-        "flagship": "qwen-max",
-        "balanced": "qwen-plus",
-        "fast": "qwen-turbo"
-      },
-      "note": "Alibaba's Qwen models. Strong multilingual + code."
-    },
-    "ollama": {
-      "name": "Ollama (local)",
-      "baseUrl": "http://localhost:11434/anthropic",
-      "compatibility": "anthropic",
-      "docsUrl": "https://ollama.com/docs",
-      "models": {
-        "flagship": "llama3.3:70b",
-        "balanced": "llama3.2:latest",
-        "fast": "llama3.2:3b"
-      },
-      "note": "Run models locally. No API key needed. Must have Ollama running."
-    },
     "openrouter": {
       "name": "OpenRouter",
-      "baseUrl": "http://localhost:4000",
-      "compatibility": "openai-only",
+      "baseUrl": "https://openrouter.ai/api",
+      "compatibility": "anthropic",
       "docsUrl": "https://openrouter.ai/docs",
       "models": {
         "flagship": "anthropic/claude-opus-4",
         "balanced": "deepseek/deepseek-chat",
         "fast": "meta-llama/llama-3.3-70b-instruct"
       },
-      "requiresLiteLLM": true,
-      "litellmModel": "openrouter/anthropic/claude-opus-4",
-      "litellmEnvKey": "OPENROUTER_API_KEY",
-      "note": "Gateway to 100+ models (Claude, GPT, Gemini, DeepSeek, Llama, Grok). One API key for all. Requires LiteLLM proxy.",
+      "note": "Gateway to 100+ models. Base URL ends in /api (not /api/v1) — the SDK appends /v1/messages automatically.",
       "popularModels": [
         "anthropic/claude-opus-4",
         "anthropic/claude-sonnet-4-5",
-        "openai/gpt-5.5",
+        "openai/gpt-4.1",
         "openai/gpt-4o",
         "google/gemini-2.5-pro",
         "deepseek/deepseek-chat",
@@ -165,6 +48,136 @@
         "microsoft/phi-4",
         "mistralai/mistral-large"
       ]
+    },
+    "kimi": {
+      "name": "Kimi (Moonshot AI)",
+      "baseUrl": "https://api.moonshot.ai/anthropic",
+      "compatibility": "anthropic",
+      "docsUrl": "https://platform.moonshot.cn/docs",
+      "models": {
+        "flagship": "kimi-k2.5",
+        "balanced": "moonshot-v1-128k",
+        "fast": "moonshot-v1-8k"
+      },
+      "note": "Anthropic-compatible API. China region: https://api.moonshot.cn/anthropic"
+    },
+    "glm": {
+      "name": "GLM / Z.AI (Zhipu)",
+      "baseUrl": "https://api.z.ai/api/anthropic",
+      "compatibility": "anthropic",
+      "docsUrl": "https://open.bigmodel.cn/dev/howuse/introduction",
+      "models": {
+        "flagship": "glm-4.6",
+        "balanced": "glm-4",
+        "fast": "glm-4-flash"
+      },
+      "note": "International endpoint (Z.AI). Mainland China: https://open.bigmodel.cn/api/anthropic"
+    },
+    "openai": {
+      "name": "OpenAI",
+      "baseUrl": "http://localhost:4000",
+      "compatibility": "openai-only",
+      "docsUrl": "https://platform.openai.com/docs",
+      "models": {
+        "flagship": "gpt-4.1",
+        "balanced": "gpt-4o",
+        "fast": "gpt-4o-mini"
+      },
+      "requiresLiteLLM": true,
+      "litellmModel": "openai/gpt-4.1",
+      "litellmEnvKey": "OPENAI_API_KEY",
+      "note": "OpenAI-compatible API only — needs LiteLLM proxy to use with Claude Code."
+    },
+    "gemini": {
+      "name": "Google Gemini",
+      "baseUrl": "http://localhost:4000",
+      "compatibility": "openai-only",
+      "docsUrl": "https://ai.google.dev/docs",
+      "models": {
+        "flagship": "gemini-2.5-pro",
+        "balanced": "gemini-2.5-pro",
+        "fast": "gemini-2.5-flash"
+      },
+      "requiresLiteLLM": true,
+      "litellmModel": "gemini/gemini-2.5-pro",
+      "litellmEnvKey": "GEMINI_API_KEY",
+      "note": "OpenAI-compatible API only — needs LiteLLM proxy. Get key at aistudio.google.com."
+    },
+    "groq": {
+      "name": "Groq",
+      "baseUrl": "http://localhost:4000",
+      "compatibility": "openai-only",
+      "docsUrl": "https://console.groq.com/docs",
+      "models": {
+        "flagship": "llama-3.3-70b-versatile",
+        "balanced": "llama-3.3-70b-versatile",
+        "fast": "llama-3.1-8b-instant"
+      },
+      "requiresLiteLLM": true,
+      "litellmModel": "groq/llama-3.3-70b-versatile",
+      "litellmEnvKey": "GROQ_API_KEY",
+      "note": "OpenAI-compatible API only — needs LiteLLM proxy. Ultra-fast inference, free tier available."
+    },
+    "mistral": {
+      "name": "Mistral AI",
+      "baseUrl": "http://localhost:4000",
+      "compatibility": "openai-only",
+      "docsUrl": "https://docs.mistral.ai",
+      "models": {
+        "flagship": "mistral-large-latest",
+        "balanced": "mistral-small-latest",
+        "fast": "mistral-small-latest"
+      },
+      "requiresLiteLLM": true,
+      "litellmModel": "mistral/mistral-large-latest",
+      "litellmEnvKey": "MISTRAL_API_KEY",
+      "note": "OpenAI-compatible API only — needs LiteLLM proxy. European provider, strong at code."
+    },
+    "together": {
+      "name": "Together AI",
+      "baseUrl": "http://localhost:4000",
+      "compatibility": "openai-only",
+      "docsUrl": "https://docs.together.ai",
+      "models": {
+        "flagship": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+        "balanced": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+        "fast": "meta-llama/Llama-3.2-3B-Instruct-Turbo"
+      },
+      "requiresLiteLLM": true,
+      "litellmModel": "together_ai/meta-llama/Llama-3.3-70B-Instruct-Turbo",
+      "litellmEnvKey": "TOGETHERAI_API_KEY",
+      "note": "OpenAI-compatible API only — needs LiteLLM proxy. Many open-source model options."
+    },
+    "qwen": {
+      "name": "Qwen (Alibaba)",
+      "baseUrl": "http://localhost:4000",
+      "compatibility": "openai-only",
+      "docsUrl": "https://www.alibabacloud.com/help/en/model-studio",
+      "models": {
+        "flagship": "qwen-max",
+        "balanced": "qwen-plus",
+        "fast": "qwen-turbo"
+      },
+      "requiresLiteLLM": true,
+      "litellmModel": "dashscope/qwen-max",
+      "litellmEnvKey": "DASHSCOPE_API_KEY",
+      "note": "OpenAI-compatible API only — needs LiteLLM proxy. Strong multilingual + code."
+    },
+    "ollama": {
+      "name": "Ollama (local)",
+      "baseUrl": "http://localhost:4000",
+      "compatibility": "openai-only",
+      "docsUrl": "https://ollama.com/docs",
+      "models": {
+        "flagship": "llama3.3:70b",
+        "balanced": "llama3.2:latest",
+        "fast": "llama3.2:3b"
+      },
+      "requiresLiteLLM": true,
+      "litellmModel": "ollama/llama3.3",
+      "litellmEnvKey": "",
+      "litellmExtraArgs": "--api_base http://localhost:11434",
+      "note": "OpenAI-compatible API only — needs LiteLLM proxy. No API key needed, runs locally."
     },
     "custom": {
       "name": "Custom / Self-hosted",

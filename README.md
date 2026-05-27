@@ -47,17 +47,23 @@ claude-mm unset-default            # remove permanent override
 
 ## Built-in profiles
 
-| Profile | Provider | Main Model | Subagent | Key needed |
-|---------|----------|------------|----------|------------|
-| `claude` | Anthropic | *(Claude Code default)* | *(default)* | No |
-| `claude-max` | Anthropic | *(Claude Code default, max effort)* | *(default)* | No |
-| `deepseek` | DeepSeek | deepseek-v4-pro | deepseek-v4-flash | Yes |
-| `deepseek-flash` | DeepSeek | deepseek-v4-flash | deepseek-v4-flash | Yes |
-| `openai` | OpenAI | gpt-5.5 | gpt-4o-mini | Yes |
-| `gemini` | Google | gemini-2.5-pro | gemini-2.5-flash | Yes |
-| `groq` | Groq | llama-3.3-70b-versatile | llama-3.1-8b-instant | Yes |
+| Profile | Provider | Main Model | Subagent | Key needed | Setup |
+|---------|----------|------------|----------|------------|-------|
+| `claude` | Anthropic | *(Claude Code default)* | *(default)* | No | None |
+| `claude-max` | Anthropic | *(Claude Code default, max effort)* | *(default)* | No | None |
+| `deepseek` | DeepSeek | deepseek-v4-pro | deepseek-v4-flash | Yes | Direct |
+| `deepseek-flash` | DeepSeek | deepseek-v4-flash | deepseek-v4-flash | Yes | Direct |
+| `openrouter` | OpenRouter | anthropic/claude-opus-4 | llama-3.3-70b | Yes | Direct |
+| `kimi` | Moonshot AI | kimi-k2.5 | moonshot-v1-8k | Yes | Direct |
+| `glm` | Z.AI (intl) | glm-4.6 | glm-4-flash | Yes | Direct |
+| `glm-cn` | Zhipu BigModel | glm-4.6 | glm-4-flash | Yes | Direct (CN) |
+| `openai` | OpenAI | gpt-4.1 | gpt-4o-mini | Yes | LiteLLM proxy |
+| `gemini` | Google | gemini-2.5-pro | gemini-2.5-flash | Yes | LiteLLM proxy |
+| `groq` | Groq | llama-3.3-70b-versatile | llama-3.1-8b-instant | Yes | LiteLLM proxy |
 
 > `claude` and `claude-max` set no model overrides — Claude Code always picks its current best models. Zero staleness.
+>
+> **Direct** profiles connect to the provider's Anthropic-compatible API without any proxy. **LiteLLM proxy** profiles require `litellm` running locally — see setup below.
 
 ---
 
@@ -131,45 +137,69 @@ View the full registry:
 claude-mm providers
 ```
 
-| Provider | Key | Compatibility |
-|----------|-----|---------------|
-| Anthropic | `anthropic` | Native |
-| DeepSeek | `deepseek` | Anthropic-compatible |
-| OpenAI | `openai` | Anthropic-compatible |
-| Google Gemini | `gemini` | Anthropic-compatible |
-| Groq | `groq` | Anthropic-compatible |
-| Mistral AI | `mistral` | Anthropic-compatible |
-| Together AI | `together` | Anthropic-compatible |
-| Qwen (Alibaba) | `qwen` | Anthropic-compatible |
-| Ollama (local) | `ollama` | Anthropic-compatible |
-| OpenRouter | `openrouter` | Needs LiteLLM proxy |
-| Kimi (Moonshot) | `kimi` | Needs LiteLLM proxy |
-| GLM (Zhipu AI) | `glm` | Needs LiteLLM proxy |
-| Custom | `custom` | Anthropic-compatible |
+| Provider | Key | Compatibility | Setup |
+|----------|-----|---------------|-------|
+| Anthropic | `anthropic` | Native | None |
+| DeepSeek | `deepseek` | Anthropic-compatible | Direct |
+| OpenRouter | `openrouter` | Anthropic-compatible | Direct |
+| Kimi (Moonshot) | `kimi` | Anthropic-compatible | Direct |
+| GLM / Z.AI (intl) | `glm` | Anthropic-compatible | Direct |
+| GLM / Zhipu (CN) | `glm-cn` | Anthropic-compatible | Direct (CN) |
+| OpenAI | `openai` | OpenAI-only | LiteLLM proxy |
+| Google Gemini | `gemini` | OpenAI-only | LiteLLM proxy |
+| Groq | `groq` | OpenAI-only | LiteLLM proxy |
+| Mistral AI | `mistral` | OpenAI-only | LiteLLM proxy |
+| Together AI | `together` | OpenAI-only | LiteLLM proxy |
+| Qwen (Alibaba) | `qwen` | OpenAI-only | LiteLLM proxy |
+| Ollama (local) | `ollama` | OpenAI-only | LiteLLM proxy |
+| Custom | `custom` | Anthropic-compatible | Direct |
 
-### OpenRouter / Kimi / GLM (OpenAI-only providers)
+**Why LiteLLM for some?** Claude Code sends requests in Anthropic's `/v1/messages` format. OpenAI, Groq, Gemini etc. only speak `/v1/chat/completions` — a different wire protocol. LiteLLM translates between them locally. DeepSeek, OpenRouter, Kimi, and GLM all ship real Anthropic-compatible endpoints so they connect directly with no proxy.
 
-These providers only expose an OpenAI-compatible API. Claude Code needs Anthropic-compatible format. Bridge with LiteLLM:
+### Providers that need LiteLLM proxy
 
+Install LiteLLM once:
 ```bash
-pip install litellm
-
-# OpenRouter — access 100+ models with one API key (openrouter.ai)
-litellm --model openrouter/anthropic/claude-opus-4 --api_key YOUR_OPENROUTER_KEY --port 4000
-
-# Kimi (Moonshot)
-litellm --model openai/moonshot-v1-128k --api_key YOUR_MOONSHOT_KEY --port 4000
-
-# GLM (Zhipu AI)
-litellm --model openai/glm-4-plus --api_key YOUR_ZHIPUAI_KEY --port 4000
+pip install 'litellm[proxy]'
 ```
 
-Then add the profile (`claude-mm add` → pick provider). Base URL auto-set to `http://localhost:4000`. Start LiteLLM before launching Claude.
+Start the proxy for your provider (in a separate terminal, before launching Claude):
+
+```bash
+# OpenAI
+litellm --model openai/gpt-4.1 --api_key $OPENAI_API_KEY --port 4000
+
+# Google Gemini (get key at aistudio.google.com)
+litellm --model gemini/gemini-2.5-pro --api_key $GEMINI_API_KEY --port 4000
+
+# Groq
+litellm --model groq/llama-3.3-70b-versatile --api_key $GROQ_API_KEY --port 4000
+
+# Mistral
+litellm --model mistral/mistral-large-latest --api_key $MISTRAL_API_KEY --port 4000
+
+# Together AI
+litellm --model together_ai/meta-llama/Llama-3.3-70B-Instruct-Turbo --api_key $TOGETHERAI_API_KEY --port 4000
+
+# OpenRouter — access 100+ models with one key (openrouter.ai)
+litellm --model openrouter/anthropic/claude-opus-4 --api_key $OPENROUTER_API_KEY --port 4000
+
+# Kimi (Moonshot)
+litellm --model openai/moonshot-v1-128k --api_key $MOONSHOT_API_KEY --port 4000
+
+# GLM (Zhipu AI)
+litellm --model openai/glm-4-plus --api_key $ZHIPUAI_API_KEY --port 4000
+
+# Ollama (local, no API key)
+litellm --model ollama/llama3.3 --api_base http://localhost:11434 --port 4000
+```
+
+Then run `claude-mm launch <profile>`. The CLI will remind you with the exact command if LiteLLM isn't set up.
 
 **OpenRouter popular models** (swap into the LiteLLM `--model` flag):
 ```
 openrouter/anthropic/claude-opus-4
-openrouter/openai/gpt-5.5
+openrouter/openai/gpt-4.1
 openrouter/google/gemini-2.5-pro
 openrouter/deepseek/deepseek-chat
 openrouter/deepseek/deepseek-r1

@@ -28,7 +28,7 @@
       }
     },
     "deepseek": {
-      "description": "DeepSeek v4 Pro — best coding model",
+      "description": "DeepSeek v4 Pro — Anthropic-compatible, best value",
       "env": {
         "ANTHROPIC_BASE_URL": "https://api.deepseek.com/anthropic",
         "ANTHROPIC_AUTH_TOKEN": "",
@@ -37,7 +37,8 @@
         "ANTHROPIC_DEFAULT_SONNET_MODEL": "deepseek-v4-pro",
         "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4-flash",
         "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek-v4-flash",
-        "CLAUDE_CODE_EFFORT_LEVEL": "max"
+        "CLAUDE_CODE_EFFORT_LEVEL": "max",
+        "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1"
       }
     },
     "deepseek-flash": {
@@ -50,46 +51,112 @@
         "ANTHROPIC_DEFAULT_SONNET_MODEL": "deepseek-v4-flash",
         "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4-flash",
         "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek-v4-flash",
-        "CLAUDE_CODE_EFFORT_LEVEL": "max"
+        "CLAUDE_CODE_EFFORT_LEVEL": "max",
+        "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1"
+      }
+    },
+    "openrouter": {
+      "description": "OpenRouter — 100+ models with one API key",
+      "env": {
+        "ANTHROPIC_BASE_URL": "https://openrouter.ai/api",
+        "ANTHROPIC_AUTH_TOKEN": "",
+        "ANTHROPIC_MODEL": "anthropic/claude-opus-4",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "anthropic/claude-opus-4",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "deepseek/deepseek-chat",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "meta-llama/llama-3.3-70b-instruct",
+        "CLAUDE_CODE_SUBAGENT_MODEL": "meta-llama/llama-3.3-70b-instruct",
+        "CLAUDE_CODE_EFFORT_LEVEL": "max",
+        "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1"
+      }
+    },
+    "kimi": {
+      "description": "Kimi K2.5 (Moonshot AI) — Anthropic-compatible",
+      "env": {
+        "ANTHROPIC_BASE_URL": "https://api.moonshot.ai/anthropic",
+        "ANTHROPIC_AUTH_TOKEN": "",
+        "ANTHROPIC_MODEL": "kimi-k2.5",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "kimi-k2.5",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "moonshot-v1-128k",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "moonshot-v1-8k",
+        "CLAUDE_CODE_SUBAGENT_MODEL": "moonshot-v1-8k",
+        "CLAUDE_CODE_EFFORT_LEVEL": "max",
+        "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1",
+        "ENABLE_TOOL_SEARCH": "false"
+      }
+    },
+    "glm": {
+      "description": "GLM 4.6 via Z.AI — Anthropic-compatible (international)",
+      "env": {
+        "ANTHROPIC_BASE_URL": "https://api.z.ai/api/anthropic",
+        "ANTHROPIC_AUTH_TOKEN": "",
+        "ANTHROPIC_MODEL": "glm-4.6",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-4.6",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-4",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4-flash",
+        "CLAUDE_CODE_SUBAGENT_MODEL": "glm-4-flash",
+        "CLAUDE_CODE_EFFORT_LEVEL": "max",
+        "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1",
+        "API_TIMEOUT_MS": "3000000"
+      }
+    },
+    "glm-cn": {
+      "description": "GLM 4.6 via Zhipu BigModel — Anthropic-compatible (mainland China)",
+      "env": {
+        "ANTHROPIC_BASE_URL": "https://open.bigmodel.cn/api/anthropic",
+        "ANTHROPIC_AUTH_TOKEN": "",
+        "ANTHROPIC_MODEL": "glm-4.6",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-4.6",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "glm-4",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4-flash",
+        "CLAUDE_CODE_SUBAGENT_MODEL": "glm-4-flash",
+        "CLAUDE_CODE_EFFORT_LEVEL": "max",
+        "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1",
+        "API_TIMEOUT_MS": "3000000"
       }
     },
     "openai": {
-      "description": "OpenAI GPT-5.5 — latest flagship",
+      "description": "OpenAI GPT-4.1 via LiteLLM proxy",
       "env": {
-        "ANTHROPIC_BASE_URL": "https://api.openai.com/v1/anthropic",
-        "ANTHROPIC_AUTH_TOKEN": "",
-        "ANTHROPIC_MODEL": "gpt-5.5",
-        "ANTHROPIC_DEFAULT_OPUS_MODEL": "gpt-5.5",
-        "ANTHROPIC_DEFAULT_SONNET_MODEL": "gpt-5.5",
+        "ANTHROPIC_BASE_URL": "http://localhost:4000",
+        "ANTHROPIC_AUTH_TOKEN": "sk-litellm",
+        "ANTHROPIC_MODEL": "gpt-4.1",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "gpt-4.1",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "gpt-4.1",
         "ANTHROPIC_DEFAULT_HAIKU_MODEL": "gpt-4o-mini",
         "CLAUDE_CODE_SUBAGENT_MODEL": "gpt-4o-mini",
-        "CLAUDE_CODE_EFFORT_LEVEL": "max"
+        "CLAUDE_CODE_EFFORT_LEVEL": "max",
+        "CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK": "1",
+        "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1"
       }
     },
     "gemini": {
-      "description": "Google Gemini 2.5 Pro",
+      "description": "Google Gemini 2.5 Pro via LiteLLM proxy",
       "env": {
-        "ANTHROPIC_BASE_URL": "https://generativelanguage.googleapis.com/v1beta/openai",
-        "ANTHROPIC_AUTH_TOKEN": "",
+        "ANTHROPIC_BASE_URL": "http://localhost:4000",
+        "ANTHROPIC_AUTH_TOKEN": "sk-litellm",
         "ANTHROPIC_MODEL": "gemini-2.5-pro",
         "ANTHROPIC_DEFAULT_OPUS_MODEL": "gemini-2.5-pro",
         "ANTHROPIC_DEFAULT_SONNET_MODEL": "gemini-2.5-flash",
         "ANTHROPIC_DEFAULT_HAIKU_MODEL": "gemini-2.5-flash",
         "CLAUDE_CODE_SUBAGENT_MODEL": "gemini-2.5-flash",
-        "CLAUDE_CODE_EFFORT_LEVEL": "max"
+        "CLAUDE_CODE_EFFORT_LEVEL": "max",
+        "CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK": "1",
+        "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1"
       }
     },
     "groq": {
-      "description": "Groq — ultra-fast inference",
+      "description": "Groq Llama 3.3 70B via LiteLLM proxy",
       "env": {
-        "ANTHROPIC_BASE_URL": "https://api.groq.com/openai/v1/anthropic",
-        "ANTHROPIC_AUTH_TOKEN": "",
+        "ANTHROPIC_BASE_URL": "http://localhost:4000",
+        "ANTHROPIC_AUTH_TOKEN": "sk-litellm",
         "ANTHROPIC_MODEL": "llama-3.3-70b-versatile",
         "ANTHROPIC_DEFAULT_OPUS_MODEL": "llama-3.3-70b-versatile",
         "ANTHROPIC_DEFAULT_SONNET_MODEL": "llama-3.1-8b-instant",
         "ANTHROPIC_DEFAULT_HAIKU_MODEL": "llama-3.1-8b-instant",
         "CLAUDE_CODE_SUBAGENT_MODEL": "llama-3.1-8b-instant",
-        "CLAUDE_CODE_EFFORT_LEVEL": "max"
+        "CLAUDE_CODE_EFFORT_LEVEL": "max",
+        "CLAUDE_CODE_DISABLE_NONSTREAMING_FALLBACK": "1",
+        "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1"
       }
     }
   }

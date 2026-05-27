@@ -47,6 +47,25 @@ async function cmdLaunch(profileName, extraArgs) {
 
   const profile = config.profiles[profileName];
 
+  // LiteLLM proxy check
+  if (profile.env.ANTHROPIC_BASE_URL === 'http://localhost:4000') {
+    console.log(`\n${YELLOW}⚠  Profile '${profileName}' requires LiteLLM proxy on port 4000.${RESET}`);
+    console.log(`   Start it in a separate terminal before Claude launches:`);
+
+    // Find matching provider for a helpful model hint
+    const registry = profiles.loadProviders();
+    const matchedProvider = Object.values(registry).find(
+      p => p.requiresLiteLLM && p.models &&
+        (p.models.flagship === profile.env.ANTHROPIC_MODEL ||
+         p.models.fast === profile.env.CLAUDE_CODE_SUBAGENT_MODEL)
+    );
+    const modelHint = matchedProvider?.litellmModel || `<provider>/${profile.env.ANTHROPIC_MODEL}`;
+    const keyHint = matchedProvider?.litellmEnvKey ? `$${matchedProvider.litellmEnvKey}` : 'YOUR_API_KEY';
+    const extraHint = matchedProvider?.litellmExtraArgs ? ` ${matchedProvider.litellmExtraArgs}` : '';
+    console.log(`\n   ${CYAN}litellm --model ${modelHint} --api_key ${keyHint} --port 4000${extraHint}${RESET}`);
+    console.log(`\n   ${GRAY}pip install 'litellm[proxy]'  # if not installed${RESET}\n`);
+  }
+
   // Check key needed
   if (!profiles.isNativeAnthropic(profile) && !profiles.hasKey(profile)) {
     console.log(`\n${YELLOW}Warning: Profile '${profileName}' has no API key.${RESET}`);
