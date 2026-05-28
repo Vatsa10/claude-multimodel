@@ -8,16 +8,16 @@ type Compat = 'native' | 'compatible' | 'litellm'
 const providers: { name: string; label: string; flagship: string; fast: string; compat: Compat }[] = [
   { name: 'anthropic', label: 'Anthropic', flagship: 'claude-opus-4-7', fast: 'claude-haiku-4-5', compat: 'native' },
   { name: 'deepseek', label: 'DeepSeek', flagship: 'deepseek-v4-pro', fast: 'deepseek-v4-flash', compat: 'compatible' },
-  { name: 'openai', label: 'OpenAI', flagship: 'gpt-5.5', fast: 'gpt-4o-mini', compat: 'compatible' },
-  { name: 'gemini', label: 'Google Gemini', flagship: 'gemini-2.5-pro', fast: 'gemini-2.5-flash', compat: 'compatible' },
-  { name: 'groq', label: 'Groq', flagship: 'llama-3.3-70b-versatile', fast: 'llama-3.1-8b-instant', compat: 'compatible' },
-  { name: 'mistral', label: 'Mistral AI', flagship: 'mistral-large-latest', fast: 'mistral-small-latest', compat: 'compatible' },
-  { name: 'together', label: 'Together AI', flagship: 'llama-3.3-70b-turbo', fast: 'llama-3.2-3b-turbo', compat: 'compatible' },
-  { name: 'qwen', label: 'Qwen (Alibaba)', flagship: 'qwen-max', fast: 'qwen-turbo', compat: 'compatible' },
-  { name: 'openrouter', label: 'OpenRouter', flagship: '100+ models', fast: 'any', compat: 'litellm' },
-  { name: 'ollama', label: 'Ollama', flagship: 'llama3.3:70b', fast: 'llama3.2:3b', compat: 'compatible' },
-  { name: 'kimi', label: 'Kimi (Moonshot)', flagship: 'moonshot-v1-128k', fast: 'moonshot-v1-8k', compat: 'litellm' },
-  { name: 'glm', label: 'GLM (Zhipu AI)', flagship: 'glm-4-plus', fast: 'glm-4-flash', compat: 'litellm' },
+  { name: 'openrouter', label: 'OpenRouter', flagship: '100+ models', fast: 'any', compat: 'compatible' },
+  { name: 'kimi', label: 'Kimi (Moonshot)', flagship: 'kimi-k2.6', fast: 'kimi-k2-turbo', compat: 'compatible' },
+  { name: 'glm', label: 'GLM / Z.AI', flagship: 'glm-5.1', fast: 'glm-4-flash', compat: 'compatible' },
+  { name: 'openai', label: 'OpenAI', flagship: 'gpt-5.5', fast: 'gpt-4o-mini', compat: 'litellm' },
+  { name: 'gemini', label: 'Google Gemini', flagship: 'gemini-3.5-pro', fast: 'gemini-3.5-flash', compat: 'litellm' },
+  { name: 'groq', label: 'Groq', flagship: 'llama-4-70b', fast: 'llama-3-8b', compat: 'litellm' },
+  { name: 'mistral', label: 'Mistral AI', flagship: 'mistral-large-3', fast: 'mistral-small', compat: 'litellm' },
+  { name: 'together', label: 'Together AI', flagship: 'llama-4-maverick', fast: 'llama-4-scout', compat: 'litellm' },
+  { name: 'qwen', label: 'Qwen (Alibaba)', flagship: 'qwen-3.7-max', fast: 'qwen-3.5-turbo', compat: 'litellm' },
+  { name: 'ollama', label: 'Ollama (local)', flagship: 'llama3.3:70b', fast: 'llama3.2:3b', compat: 'litellm' },
 ]
 
 const badges: Record<Compat, { label: string; className: string }> = {
@@ -107,8 +107,8 @@ export default function Providers() {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="mt-8 text-xs text-zinc-400 font-mono"
         >
-          LiteLLM providers require a local proxy running on port 4000.
-          Run: <span className="text-zinc-600">litellm --model openrouter/... --port 4000</span>
+          OpenAI, Gemini, Groq, and others require a local LiteLLM proxy on port 4000.
+          DeepSeek, OpenRouter, Kimi, and GLM connect directly — no proxy needed.
         </motion.p>
       </div>
     </section>

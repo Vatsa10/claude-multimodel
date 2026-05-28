@@ -5,11 +5,11 @@ import { motion, AnimatePresence } from 'motion/react'
 import { Copy, Check, ArrowRight } from '@phosphor-icons/react'
 
 const providers = [
-  { name: 'deepseek', model: 'deepseek-v4-pro', label: 'DeepSeek', color: '#2563eb' },
-  { name: 'gemini', model: 'gemini-2.5-pro', label: 'Google Gemini', color: '#2563eb' },
-  { name: 'openai', model: 'gpt-5.5', label: 'OpenAI', color: '#2563eb' },
-  { name: 'claude', model: 'claude-sonnet (default)', label: 'Anthropic', color: '#2563eb' },
-  { name: 'groq', model: 'llama-3.3-70b-versatile', label: 'Groq', color: '#2563eb' },
+  { name: 'deepseek', model: 'deepseek-v4-pro', label: 'DeepSeek' },
+  { name: 'kimi', model: 'kimi-k2.6', label: 'Moonshot AI' },
+  { name: 'openrouter', model: 'anthropic/claude-opus-4', label: 'OpenRouter' },
+  { name: 'claude', model: 'claude-sonnet (default)', label: 'Anthropic' },
+  { name: 'glm', model: 'glm-5.1', label: 'GLM / Z.AI' },
 ]
 
 const INSTALL_CMD = 'npm install -g claude-multimodel'
