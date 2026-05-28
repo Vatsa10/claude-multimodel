@@ -53,13 +53,13 @@ claude-mm unset-default            # remove permanent override
 | `claude-max` | Anthropic | *(Claude Code default, max effort)* | *(default)* | No | None |
 | `deepseek` | DeepSeek | deepseek-v4-pro | deepseek-v4-flash | Yes | Direct |
 | `deepseek-flash` | DeepSeek | deepseek-v4-flash | deepseek-v4-flash | Yes | Direct |
-| `openrouter` | OpenRouter | anthropic/claude-opus-4 | llama-3.3-70b | Yes | Direct |
-| `kimi` | Moonshot AI | kimi-k2.5 | moonshot-v1-8k | Yes | Direct |
-| `glm` | Z.AI (intl) | glm-4.6 | glm-4-flash | Yes | Direct |
-| `glm-cn` | Zhipu BigModel | glm-4.6 | glm-4-flash | Yes | Direct (CN) |
-| `openai` | OpenAI | gpt-4.1 | gpt-4o-mini | Yes | LiteLLM proxy |
-| `gemini` | Google | gemini-2.5-pro | gemini-2.5-flash | Yes | LiteLLM proxy |
-| `groq` | Groq | llama-3.3-70b-versatile | llama-3.1-8b-instant | Yes | LiteLLM proxy |
+| `openrouter` | OpenRouter | anthropic/claude-opus-4 | llama-4-maverick | Yes | Direct |
+| `kimi` | Moonshot AI | kimi-k2.6 | kimi-k2-turbo | Yes | Direct |
+| `glm` | Z.AI (intl) | glm-5.1 | glm-4-flash | Yes | Direct |
+| `glm-cn` | Zhipu BigModel | glm-5.1 | glm-4-flash | Yes | Direct (CN) |
+| `openai` | OpenAI | gpt-5.5 | gpt-4o-mini | Yes | LiteLLM proxy |
+| `gemini` | Google | gemini-3.5-pro | gemini-3.5-flash | Yes | LiteLLM proxy |
+| `groq` | Groq | llama-4-70b | llama-3-8b | Yes | LiteLLM proxy |
 
 > `claude` and `claude-max` set no model overrides — Claude Code always picks its current best models. Zero staleness.
 >
@@ -172,23 +172,14 @@ litellm --model openai/gpt-4.1 --api_key $OPENAI_API_KEY --port 4000
 # Google Gemini (get key at aistudio.google.com)
 litellm --model gemini/gemini-2.5-pro --api_key $GEMINI_API_KEY --port 4000
 
-# Groq
-litellm --model groq/llama-3.3-70b-versatile --api_key $GROQ_API_KEY --port 4000
+# Groq (Llama 4 Maverick)
+litellm --model groq/llama-4-maverick-17b-128e-instruct --api_key $GROQ_API_KEY --port 4000
 
 # Mistral
 litellm --model mistral/mistral-large-latest --api_key $MISTRAL_API_KEY --port 4000
 
 # Together AI
-litellm --model together_ai/meta-llama/Llama-3.3-70B-Instruct-Turbo --api_key $TOGETHERAI_API_KEY --port 4000
-
-# OpenRouter — access 100+ models with one key (openrouter.ai)
-litellm --model openrouter/anthropic/claude-opus-4 --api_key $OPENROUTER_API_KEY --port 4000
-
-# Kimi (Moonshot)
-litellm --model openai/moonshot-v1-128k --api_key $MOONSHOT_API_KEY --port 4000
-
-# GLM (Zhipu AI)
-litellm --model openai/glm-4-plus --api_key $ZHIPUAI_API_KEY --port 4000
+litellm --model together_ai/meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8 --api_key $TOGETHERAI_API_KEY --port 4000
 
 # Ollama (local, no API key)
 litellm --model ollama/llama3.3 --api_base http://localhost:11434 --port 4000
@@ -196,15 +187,19 @@ litellm --model ollama/llama3.3 --api_base http://localhost:11434 --port 4000
 
 Then run `claude-mm launch <profile>`. The CLI will remind you with the exact command if LiteLLM isn't set up.
 
-**OpenRouter popular models** (swap into the LiteLLM `--model` flag):
+> **OpenRouter, Kimi, and GLM** connect directly — no LiteLLM needed. See the [Direct providers](#known-providers) section.
+
+**OpenRouter popular models** (set via `claude-mm set-model openrouter <model-id>`):
 ```
-openrouter/anthropic/claude-opus-4
-openrouter/openai/gpt-4.1
-openrouter/google/gemini-2.5-pro
-openrouter/deepseek/deepseek-chat
-openrouter/deepseek/deepseek-r1
-openrouter/meta-llama/llama-3.3-70b-instruct
-openrouter/x-ai/grok-3
+anthropic/claude-opus-4
+openai/gpt-4.1
+openai/o3
+google/gemini-2.5-pro
+deepseek/deepseek-chat
+deepseek/deepseek-r1
+meta-llama/llama-4-maverick
+moonshotai/kimi-k2.6
+x-ai/grok-3
 ```
 
 ---
